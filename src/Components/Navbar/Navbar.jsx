@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../Provider/AuthProvider";
 
 const Navbar = () => {
   const links = (
@@ -14,6 +16,8 @@ const Navbar = () => {
       </li>
     </>
   );
+
+  const authInfo = useContext(AuthContext);
 
   return (
     <div>
