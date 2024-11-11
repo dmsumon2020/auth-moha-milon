@@ -1,6 +1,11 @@
+import { useContext } from "react";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../Provider/AuthProvider";
+import { GoogleAuthProvider } from "firebase/auth/web-extension";
 
 const Register = () => {
+  const { createUser, signInByGoogle } = useContext(AuthContext);
+
   const handleRegister = (e) => {
     e.preventDefault();
 
@@ -8,6 +13,35 @@ const Register = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
     console.log(name, email, password);
+
+    // create user
+    createUser(email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+        console.log(user);
+        e.target.reset();
+      })
+      .catch((error) => {
+        const errorMessage = error.message;
+        console.log(errorMessage);
+      });
+  };
+
+  const handleSignInByGoogle = () => {
+    signInByGoogle()
+      .then((result) => {
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const user = result.user;
+        console.log("credential ", credential);
+        console.log("user ", user);
+      })
+      .catch((error) => {
+        // Handle Errors here.
+
+        const errorMessage = error.message;
+
+        console.log(errorMessage);
+      });
   };
 
   return (
@@ -62,6 +96,7 @@ const Register = () => {
           <p className="px-4 mb-4">
             Already have an account? <Link to="/login">Login</Link>
           </p>
+          <button onClick={handleSignInByGoogle}>Register Google</button>
         </div>
       </div>
     </div>
